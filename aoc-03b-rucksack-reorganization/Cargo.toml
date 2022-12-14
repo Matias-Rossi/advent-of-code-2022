@@ -1,5 +1,5 @@
 [package]
-name = "aoc-03-rucksack-reorganization"
+name = "aoc-03b-rucksack-reorganization"
 version = "0.1.0"
 edition = "2021"
 

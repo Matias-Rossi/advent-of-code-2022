@@ -3,5 +3,5 @@
 version = 3
 
 [[package]]
-name = "aoc-03-rucksack-reorganization"
+name = "aoc-utils"
 version = "0.1.0"

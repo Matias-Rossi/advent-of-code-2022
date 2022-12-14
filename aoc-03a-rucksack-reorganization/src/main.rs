@@ -12,7 +12,6 @@ fn main() {
     if let Ok(lines) = read_lines("./resources/input.txt") {
 
         let mut repeated_items: Vec<char> = Vec::new();
-
         
         for line in lines {
             if let Ok(text) = line {
@@ -22,6 +21,7 @@ fn main() {
                     repeated_items.push(*item);
                 }
             }
+
         }
 
         let mut priority_sum: u32 = 0;
@@ -30,7 +30,7 @@ fn main() {
             priority_sum += get_priority_from_item(*c);
         }
 
-        println!("\nPriority sum: {priority_sum}") //7821
+        println!("\nPriority sum: {priority_sum}"); //7821
 
 
     }
