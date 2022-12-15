@@ -61,7 +61,7 @@ pub mod matrix {
         pub rows: Vec<Vec<Option<T>>>,
     }
 
-    impl<T: Copy> Matrix<T> {
+    impl<T: Copy + std::fmt::Debug> Matrix<T> {
         pub fn size(&self) -> (u32, u32) {
             let height = self.rows.len() as u32;
 
@@ -100,7 +100,7 @@ pub mod matrix {
             let mut new_rows = Vec::new();
 
             for column_index in 0..original_w {
-                let mut new_column: Vec<T> = Vec::new();
+                let mut new_column: Vec<Option<T>> = Vec::new();
                 for row in &(self.rows) {
                     new_column.insert(0, row[column_index as usize]);
                 }
@@ -110,30 +110,52 @@ pub mod matrix {
             return Matrix { rows: new_rows };
         }
 
-        pub fn pop_from_row(&mut self, row: usize) -> Option<T> {
-            self.rows.iter_mut().nth(row).unwrap().pop()
+        pub fn pop_from_row(&mut self, row_index: usize) -> Option<T> {
+            let mut last_some_element_index: usize = 0;
+            let mut row = self.rows.iter_mut().nth(row_index).unwrap();
+
+            //println!("popping from row {}: {:?}",row_index, row);
+
+            for (i, elem) in row.iter_mut().enumerate() {
+                match elem {
+                    Some(_) => last_some_element_index = i,
+                    None => (), 
+                }
+            }
+
+            //row.push(None);
+
+            row.remove(last_some_element_index)
         }
 
-        pub fn push_to_row(&mut self, row: usize, element: T) {
-            self.rows.iter_mut().nth(row).unwrap().push(element);
+        pub fn push_to_row(&mut self, row_index: usize, element: T) {
+            let mut last_some_element_index: usize = 0;
+            let mut row = self.rows.iter_mut().nth(row_index).unwrap();
+            let mut none_found = false;
+
+            for (i, elem) in row.iter_mut().enumerate() {
+                match elem {
+                    Some(_) => last_some_element_index = i,
+                    None => none_found = true, 
+                }
+            }
+
+            if none_found {
+                row.insert(last_some_element_index + 1, Some(element));
+                row.remove(row.len() - 1);
+            } else {
+                row.push(Some(element));
+            }
+
+            //self.rows.iter_mut().nth(row).unwrap().push(element);
         }
 
-        /*
-        fn set_value(&mut self, new_value: T, (column, row): (u32, u32)) {
-
-            let (width, height) = self.size();
-            println!("Position ({column}, {row}) to be set at matrix with size ({height}, {width})");
-
-            let row = self.rows.iter_mut().nth(row as usize).unwrap();
-            let value_to_be_changed = &mut *(row.iter_mut().nth(column as usize).unwrap());
-            *value_to_be_changed = new_value;
+        pub fn remove_nones(&mut self) {
+            for row in self.rows.iter_mut() {
+                row.retain(|e| e.is_some());
+            }
         }
 
-        fn get_value(&self, (column, row): (u32, u32)) -> &T {
-            let row = self.rows.iter().nth(row as usize).unwrap();
-            row.iter().nth(column as usize).unwrap()
-        }
-        */
     }
 
     #[cfg(test)]
@@ -143,7 +165,7 @@ pub mod matrix {
         #[test]
         fn matrix_size() {
             let matrix = Matrix {
-                rows: Vec::from([Vec::from([1, 2]), Vec::from([1, 2, 3])]),
+                rows: Vec::from([Vec::from([Some(1), Some(2)]), Vec::from([Some(1), Some(2), Some(3)])]),
             };
             assert_eq!(matrix.size(), (3, 2));
         }
@@ -159,10 +181,22 @@ pub mod matrix {
         #[test]
         fn transpose() {
             let matrix = Matrix {
-                rows: Vec::from([Vec::from([1, 2, 3]), Vec::from([4, 5, 6])]),
+                rows: Vec::from([Vec::from([Some(1), Some(2), Some(3)]), Vec::from([Some(4), Some(5), Some(6)])]),
             };
             let transposed_matrix = Matrix {
-                rows: Vec::from([Vec::from([1, 4]), Vec::from([2, 5]), Vec::from([3, 6])]),
+                rows: Vec::from([Vec::from([Some(1), Some(4)]), Vec::from([Some(2), Some(5)]), Vec::from([Some(3), Some(6)])]),
+            };
+
+            assert_eq!(matrix.transpose(), transposed_matrix);
+        }
+
+        #[test]
+        fn transpose_with_blanks() {
+            let matrix = Matrix {
+                rows: Vec::from([Vec::from([Some(1), Some(2), None]), Vec::from([Some(4), Some(5), Some(6)])]),
+            };
+            let transposed_matrix = Matrix {
+                rows: Vec::from([Vec::from([Some(1), Some(4)]), Vec::from([Some(2), Some(5)]), Vec::from([None, Some(6)])]),
             };
 
             assert_eq!(matrix.transpose(), transposed_matrix);
@@ -171,13 +205,28 @@ pub mod matrix {
         #[test]
         fn rotate() {
             let matrix = Matrix {
-                rows: Vec::from([Vec::from([1, 2, 3]), Vec::from([4, 5, 6])]),
+                rows: Vec::from([Vec::from([Some(1), Some(2), Some(3)]), Vec::from([Some(4), Some(5), Some(6)])]),
             };
             let rotated_matrix = Matrix {
-                rows: Vec::from([Vec::from([4, 1]), Vec::from([5, 2]), Vec::from([6, 3])]),
+                rows: Vec::from([Vec::from([Some(4), Some(1)]), Vec::from([Some(5), Some(2)]), Vec::from([Some(6), Some(3)])]),
             };
 
             assert_eq!(matrix.rotate(), rotated_matrix);
+        }
+
+        #[test]
+        fn pop_and_push_to_row() {
+            let mut matrix = Matrix {
+                rows: Vec::from([Vec::from([Some(1), Some(2), Some(3)]), Vec::from([Some(4), Some(5), Some(6)])]),
+            };
+            let e = matrix.pop_from_row(1).unwrap();
+            matrix.push_to_row(0, e);
+
+            let mut expected_matrix = Matrix {
+                rows: Vec::from([Vec::from([Some(1), Some(2), Some(3), Some(6)]), Vec::from([Some(4), Some(5)])]),
+            };
+
+            assert_eq!(matrix, expected_matrix);
         }
 
         /*
