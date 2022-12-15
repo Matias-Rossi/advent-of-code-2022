@@ -1,6 +1,8 @@
 use utils::input::read_lines; //Single 4KB line
 use std::{collections::HashSet, process::{self, exit}};
 
+const DISTINCT_CHARACTERS: usize = 14; //4 for part A; 14 for part B
+
 fn main() {
     if let Ok(lines) = read_lines("./resources/input.txt") {
         let mut chars_read: usize = 0;
@@ -16,7 +18,9 @@ fn main() {
                     chars_read += 1;
 
                     if values_found {
-                        println!("Found first start-of-packet marker after processing {} characters.", chars_read);
+                        //println!("Found first start-of-packet marker after processing {} characters.", chars_read); //1794
+                        println!("Found first start-of-message marker after processing {} characters.", chars_read); //
+
                         exit(0);
                     }
 
@@ -29,7 +33,7 @@ fn main() {
 fn add_char_to_list(list: &mut Vec<char>, character: char) -> Vec<char>{
     list.insert(0, character);
 
-    if list.len() > 4 {
+    if list.len() > DISTINCT_CHARACTERS {
         list.pop();
     }
 
@@ -37,7 +41,7 @@ fn add_char_to_list(list: &mut Vec<char>, character: char) -> Vec<char>{
 }
 
 fn are_chars_different(list: &Vec<char>) -> bool {
-    if list.len() < 4 {
+    if list.len() < DISTINCT_CHARACTERS {
         return false;
     }
 
@@ -47,5 +51,5 @@ fn are_chars_different(list: &Vec<char>) -> bool {
         set.insert(c);
     }
 
-    set.len() == 4
+    set.len() == DISTINCT_CHARACTERS
 }
