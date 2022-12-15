@@ -1,5 +1,5 @@
 [package]
-name = "aoc-05-supply-stacks"
+name = "aoc-05a-supply-stacks"
 version = "0.1.0"
 edition = "2021"
 

@@ -111,21 +111,23 @@ pub mod matrix {
         }
 
         pub fn pop_from_row(&mut self, row_index: usize) -> Option<T> {
-            let mut last_some_element_index: usize = 0;
+            let mut last_some_element_index: isize = -1;
             let row = self.rows.iter_mut().nth(row_index).unwrap();
 
             //println!("popping from row {}: {:?}",row_index, row);
 
             for (i, elem) in row.iter_mut().enumerate() {
                 match elem {
-                    Some(_) => last_some_element_index = i,
+                    Some(_) => last_some_element_index = i as isize,
                     None => (), 
                 }
             }
 
             //row.push(None);
-
-            row.remove(last_some_element_index)
+            match last_some_element_index {
+                -1 => return None,
+                _ => return row.remove(last_some_element_index as usize),
+            }
         }
 
         pub fn push_to_row(&mut self, row_index: usize, element: T) {

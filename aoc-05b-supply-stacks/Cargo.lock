@@ -3,7 +3,7 @@
 version = 3
 
 [[package]]
-name = "aoc-05-supply-stacks"
+name = "aoc-05b-supply-stacks"
 version = "0.1.0"
 dependencies = [
  "utils",
