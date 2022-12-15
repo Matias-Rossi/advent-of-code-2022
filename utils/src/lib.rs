@@ -112,7 +112,7 @@ pub mod matrix {
 
         pub fn pop_from_row(&mut self, row_index: usize) -> Option<T> {
             let mut last_some_element_index: usize = 0;
-            let mut row = self.rows.iter_mut().nth(row_index).unwrap();
+            let row = self.rows.iter_mut().nth(row_index).unwrap();
 
             //println!("popping from row {}: {:?}",row_index, row);
 
@@ -130,7 +130,7 @@ pub mod matrix {
 
         pub fn push_to_row(&mut self, row_index: usize, element: T) {
             let mut last_some_element_index: usize = 0;
-            let mut row = self.rows.iter_mut().nth(row_index).unwrap();
+            let row = self.rows.iter_mut().nth(row_index).unwrap();
             let mut none_found = false;
 
             for (i, elem) in row.iter_mut().enumerate() {
@@ -222,7 +222,7 @@ pub mod matrix {
             let e = matrix.pop_from_row(1).unwrap();
             matrix.push_to_row(0, e);
 
-            let mut expected_matrix = Matrix {
+            let expected_matrix = Matrix {
                 rows: Vec::from([Vec::from([Some(1), Some(2), Some(3), Some(6)]), Vec::from([Some(4), Some(5)])]),
             };
 

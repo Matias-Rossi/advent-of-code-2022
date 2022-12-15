@@ -83,8 +83,6 @@ fn get_movement_procedure(line: &String) -> Rearrangement {
         }
     }
 
-    println!("move {} from {} to {}", amount, from, to);
-
     Rearrangement { amount, from, to }
     
 }
@@ -126,7 +124,7 @@ mod tests {
 
         move_crates_between_rows(&mut matrix, r);
 
-        let mut target_matrix = Matrix {
+        let target_matrix = Matrix {
             rows: Vec::from([Vec::from([]), Vec::from([Some('3'), Some('2'), Some('1')])]),
         };
 
