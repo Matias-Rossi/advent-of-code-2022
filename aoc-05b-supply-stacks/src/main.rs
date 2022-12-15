@@ -1,6 +1,6 @@
 use std::env;
 use utils::input::read_lines;
-use utils::matrix::Matrix;
+use utils::matrix::matrix::Matrix;
 
 #[derive(PartialEq, Eq, Debug)]
 struct Rearrangement {

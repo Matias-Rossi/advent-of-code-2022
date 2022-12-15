@@ -1,5 +1,5 @@
 use utils::input::read_lines;
-use utils::matrix::{Matrix};
+use utils::matrix::matrix::Matrix;
 use std::env;
 
 #[derive(PartialEq, Eq, Debug)]
