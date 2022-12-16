@@ -122,10 +122,3 @@ if __name__ == "__main__":
                 smallest_dir_size = dir_size;
 
         print(f'Size of dir to be deleted: {smallest_dir_size}')
-
-
-
-
-        
-        
-        
